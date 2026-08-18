@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "markdown>=3.5",
+#     "pyyaml>=6.0",
+# ]
+# ///
 """
 Build the Memex vault into a static site.
 

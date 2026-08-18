@@ -1,0 +1,13 @@
+# build output
+_site/
+
+# obsidian workspace state (keep plugins/settings if you want them synced)
+.obsidian/workspace*
+.obsidian/cache
+.trash/
+
+# anything genuinely private
+private/
+
+# os cruft
+.DS_Store

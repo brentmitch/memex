@@ -1,0 +1,44 @@
+name: Build and publish memex
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:      # lets you trigger a rebuild by hand from the Actions tab
+
+concurrency:
+  group: memex-deploy
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build dependencies
+        run: pip install markdown pyyaml
+
+      - name: Build site
+        run: python build.py
+
+      - name: Deploy over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./_site/
+          server-dir: ${{ secrets.FTP_TARGET_DIR }}
+          # Never wipe the remote directory — .htaccess and .htpasswd live there
+          # and are managed on the server, not in this repo.
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.htaccess
+            **/.htpasswd
