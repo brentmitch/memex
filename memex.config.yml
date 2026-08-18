@@ -1,0 +1,55 @@
+# Memex configuration
+#
+# This file is the single place that defines the shape of the vault.
+# Adding a folder means adding an entry to `sections:` — no code changes.
+# `build.py` reads this; `CLAUDE.md` points agents at it.
+
+site:
+  title: memex
+  tagline: Personal knowledge vault
+  # Discourage indexing even behind auth. Emits robots.txt + meta noindex.
+  noindex: true
+  # Theme files live here. Delete them and the build falls back to built-ins.
+  theme_dir: theme
+
+# Applied to every section unless the section overrides it.
+defaults:
+  publish: true # render to HTML on the published site
+  publish_raw: true # also copy the original .md, for agents to fetch
+  index: true # list on the site's index page
+  search: true # include in search.json
+  passthrough: true # copy non-markdown files (images, PDFs, data) as-is
+  sort: updated_desc # updated_desc | updated_asc | title | manual
+  immutable: false # if true, --check reports any edit to existing files
+  cite_required: false # if true, --check flags files nothing links to
+
+sections:
+  - path: projects
+    title: Projects
+    description: Active work. One hub note per project.
+
+  - path: research
+    title: Research
+    description: Synthesised notes on a subject. These cite sources/.
+
+  - path: people-places
+    title: People & Places
+    description: Genealogy, family, locations, organisations, contacts.
+
+  - path: sessions
+    title: Sessions
+    description: Raw session logs that don't map cleanly onto a topic.
+    index: false # searchable, but doesn't clutter the index page
+
+  - path: sources
+    title: Sources
+    description: >
+      Raw captures — web clippings, article text, PDFs. Input, not output.
+      Local-only by default: high volume would swamp the index, and full-text
+      captures of other people's writing shouldn't be pushed to a web server.
+    publish: false
+    publish_raw: false
+    search: false
+    index: false
+    immutable: true # captures are append-only — read, cite, never rewrite
+    cite_required: true # a capture nothing links to is a reading pile, not a vault
